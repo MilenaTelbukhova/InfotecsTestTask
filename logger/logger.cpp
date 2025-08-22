@@ -2,6 +2,9 @@
 #include <filesystem>
 #include <string>
 #include <fstream>
+#include <optional>
+#include "error.h"
+
 
 namespace {
 
@@ -29,22 +32,26 @@ namespace {
 
 }
 
-Logger::Logger(std::filesystem::path path, ImportanceLevel defaultImportanceLevel) {
-    Path = path;
-    Importance = defaultImportanceLevel;
-};
+Logger::Logger(std::filesystem::path path, ImportanceLevel defaultImportanceLevel)
+                                    : Journal(std::ofstream{path, std::ios::app}), Importance(defaultImportanceLevel){};
 
 
-void Logger::Log(ImportanceLevel importance, std::string text){
-    std::ofstream journal(Path, std::ios::app);
-    if (journal.is_open()) {
-        journal << getTime() << " [" << getImportanceString(importance) << "] "<< text << std::endl;
+Logger::~Logger(){
+    Journal.close();
+}
+std::optional<Error> Logger::Log(ImportanceLevel importance, std::string text){
+    if (importance < this->Importance) return;
+
+    if (Journal.is_open()) {
+        Journal << getTime() << " [" << getImportanceString(importance) << "] "<< text << std::endl;
+    } else {
+        return Error{"Can not open journal\n"};
     }
 };
 
 
-void Logger::ChangeImportanceLevel(ImportanceLevel importanceLevel) {
-    Importance = importanceLevel;
+void Logger::SetImportanceLevel(ImportanceLevel importanceLevel) {
+    this->Importance = importanceLevel;
 };
 
 

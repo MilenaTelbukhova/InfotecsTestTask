@@ -2,7 +2,7 @@
 #include <string>
 
 enum ImportanceLevel {
-    debug,
+    debug = 0,
     info,
     warn,
     error
@@ -11,9 +11,10 @@ enum ImportanceLevel {
 class Logger {
     public:
         Logger(std::filesystem::path path, ImportanceLevel defaultImportanceLevel);
-        void Log(ImportanceLevel importance, std::string text);
-        void ChangeImportanceLevel(ImportanceLevel importanceLevel);
+        ~Logger();
+        std::optional<Error>Log(ImportanceLevel importance, std::string text);
+        void SetImportanceLevel(ImportanceLevel importanceLevel);
     private:
         ImportanceLevel Importance;
-        std::filesystem::path Path;
+        std::ofstream Journal;
 };
