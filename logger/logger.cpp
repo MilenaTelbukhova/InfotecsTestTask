@@ -39,14 +39,16 @@ Logger::Logger(std::filesystem::path path, ImportanceLevel defaultImportanceLeve
 Logger::~Logger(){
     Journal.close();
 }
+
 std::optional<Error> Logger::Log(ImportanceLevel importance, std::string text){
-    if (importance < this->Importance) return;
+    if (importance < this->Importance) return {};
 
     if (Journal.is_open()) {
         Journal << getTime() << " [" << getImportanceString(importance) << "] "<< text << std::endl;
     } else {
         return Error{"Can not open journal\n"};
     }
+    return {};
 };
 
 

@@ -1,5 +1,8 @@
 #include <filesystem>
+#include <fstream>
 #include <string>
+#include <optional>
+#include "error.h"
 
 enum ImportanceLevel {
     debug = 0,
