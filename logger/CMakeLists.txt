@@ -1,8 +1,13 @@
-add_library(LoggerLib SHARED logger.cpp)
+option(SHARED "Собрать библиотеку динамически" OFF)
 
-target_include_directories(LoggerLib PUBLIC 
+if (SHARED)
+    add_library(LoggerLib SHARED logger.cpp)
+    target_include_directories(LoggerLib PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+else()
+    add_library(LoggerLib STATIC logger.cpp logger.h error.h)
+endif()
 
 set_target_properties(LoggerLib PROPERTIES
     VERSION 1.0.0
