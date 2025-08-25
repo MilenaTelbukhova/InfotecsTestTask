@@ -33,18 +33,20 @@ namespace {
 }
 
 Logger::Logger(std::filesystem::path path, ImportanceLevel defaultImportanceLevel)
-                                    : Journal(std::ofstream{path, std::ios::app}), Importance(defaultImportanceLevel){};
+                                    : Journal(path), 
+                                    Importance(defaultImportanceLevel){};
 
 
 Logger::~Logger(){
-    Journal.close();
+    Journal.value.close();
 }
 
 std::optional<Error> Logger::Log(ImportanceLevel importance, std::string text){
-    if (importance < this->Importance) return {};
-
-    if (Journal.is_open()) {
-        Journal << getTime() << " [" << getImportanceString(importance) << "] "<< text << std::endl;
+    std::lock_guard<std::mutex> lg_i(Importance.Mutex);
+    std::lock_guard<std::mutex> lg_j(Journal.Mutex);
+    if (importance < this->Importance.value) return {};
+    if (Journal.value.is_open()) {
+        Journal.value << getTime() << " [" << getImportanceString(importance) << "] "<< text << std::endl;
     } else {
         return Error{"Can not open journal\n"};
     }
@@ -53,7 +55,8 @@ std::optional<Error> Logger::Log(ImportanceLevel importance, std::string text){
 
 
 void Logger::SetImportanceLevel(ImportanceLevel importanceLevel) {
-    this->Importance = importanceLevel;
+    std::lock_guard<std::mutex> lg(Importance.Mutex);
+    this->Importance.value = importanceLevel;
 };
 
-
+ImportanceLevel Logger::GetImportanceLevel() { return Importance.value; };

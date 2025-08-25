@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <optional>
+#include <mutex>
 #include "error.h"
 
 enum ImportanceLevel {
@@ -17,7 +18,21 @@ class Logger {
         ~Logger();
         std::optional<Error>Log(ImportanceLevel importance, std::string text);
         void SetImportanceLevel(ImportanceLevel importanceLevel);
+        ImportanceLevel GetImportanceLevel();
     private:
-        ImportanceLevel Importance;
-        std::ofstream Journal;
+        
+        struct GuardedImportanceLevel {
+            ImportanceLevel value;
+            std::mutex Mutex;
+            GuardedImportanceLevel(ImportanceLevel l): value(l){}
+        };
+
+        struct LogJournal {
+            std::ofstream value;
+            std::mutex Mutex;
+            LogJournal(std::filesystem::path p): value(p, std::ios::app) {}
+        };
+
+        GuardedImportanceLevel Importance;
+        LogJournal Journal;
 };
