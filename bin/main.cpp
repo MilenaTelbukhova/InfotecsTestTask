@@ -29,7 +29,6 @@ std::pair<ImportanceLevel, std::string> ParseCommand(ImportanceLevel default_lev
 
     while (lptr < command.size() && command[lptr] == ' ') lptr++;
     std::string ans = command.substr(lptr);
-    std::cout << "PARSER gave away:[" << command.substr(lptr) << ']' << std::endl;
     return {level, ans};
 }
 
@@ -50,7 +49,8 @@ int main(int argc, char*argv[])
         std::getline(std::cin, s);
         auto res = ParseCommand(logger.GetImportanceLevel(), s);
         std::thread th ([&logger](ImportanceLevel importance, const std::string& message){
-            logger.Log(importance, message);
+            auto err = logger.Log(importance, message);
+            if (err.has_value()) std::cout << err.value().Message;
         }, res.first, res.second);
         th.detach();
     }

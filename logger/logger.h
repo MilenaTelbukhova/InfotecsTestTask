@@ -28,9 +28,10 @@ class Logger {
         };
 
         struct LogJournal {
+            std::filesystem::path path;
             std::ofstream value;
             std::mutex Mutex;
-            LogJournal(std::filesystem::path p): value(p, std::ios::app) {}
+            LogJournal(std::filesystem::path p): value(p, std::ios::ate), path(p) {}
         };
 
         GuardedImportanceLevel Importance;

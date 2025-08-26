@@ -46,7 +46,7 @@ std::optional<Error> Logger::Log(ImportanceLevel importance,const std::string& t
     std::lock_guard<std::mutex> lg_i(Importance.Mutex);
     std::lock_guard<std::mutex> lg_j(Journal.Mutex);
     if (importance < this->Importance.value) return {};
-    if (Journal.value.is_open()) {
+    if (Journal.value.is_open() && std::filesystem::exists(Journal.path)) {
         std::string t = getTime();
         Journal.value << t.substr(4, t.size() - 5) << " [" << getImportanceString(importance) << "] "<< text << std::endl;
     } else {
