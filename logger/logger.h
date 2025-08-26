@@ -16,7 +16,7 @@ class Logger {
     public:
         Logger(std::filesystem::path path, ImportanceLevel defaultImportanceLevel);
         ~Logger();
-        std::optional<Error>Log(ImportanceLevel importance, std::string text);
+        std::optional<Error>Log(ImportanceLevel importance, const std::string& text);
         void SetImportanceLevel(ImportanceLevel importanceLevel);
         ImportanceLevel GetImportanceLevel();
     private:
