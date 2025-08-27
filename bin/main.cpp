@@ -6,32 +6,6 @@
 #include <utility>
 #include <thread>
 
-std::pair<ImportanceLevel, std::string> ParseCommand(ImportanceLevel default_level, std::string& command) {
-    ImportanceLevel level = default_level;
-    if(command.size() < 5) return {level, command};
-    size_t lptr = command.find(' ');
-    if (lptr == std::string::npos) lptr = 0;
-
-    std::string str_level = command.substr(0, lptr);
-
-    if(str_level == "INFO") {
-        level = ImportanceLevel::info;
-
-    } else if(str_level== "WARN") {
-        level = ImportanceLevel::warn;
-
-    } else if(str_level == "ERROR") {
-        level = ImportanceLevel::error;
-
-    } else if (str_level == "DEBUG") {
-        level = ImportanceLevel::debug;
-    } else lptr = 0;
-
-    while (lptr < command.size() && command[lptr] == ' ') lptr++;
-    std::string ans = command.substr(lptr);
-    return {level, ans};
-}
-
 
 int main(int argc, char*argv[])
 {
