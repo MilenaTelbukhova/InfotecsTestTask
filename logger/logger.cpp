@@ -34,8 +34,8 @@ namespace {
 }
 
 Logger::Logger(std::filesystem::path path, ImportanceLevel defaultImportanceLevel)
-                                    : Journal(path), 
-                                    Importance(defaultImportanceLevel){};
+                                    : Journal(path),
+                                    BaseLogger(defaultImportanceLevel){};
 
 
 Logger::~Logger(){
@@ -55,10 +55,28 @@ std::optional<Error> Logger::Log(ImportanceLevel importance,const std::string& t
     return {};
 };
 
+std::pair<ImportanceLevel, std::string> ParseCommand(ImportanceLevel default_level, std::string& command) {
+    ImportanceLevel level = default_level;
+    if(command.size() < 5) return {level, command};
+    size_t lptr = command.find(' ');
+    if (lptr == std::string::npos) lptr = 0;
 
-void Logger::SetImportanceLevel(ImportanceLevel importanceLevel) {
-    std::lock_guard<std::mutex> lg(Importance.Mutex);
-    this->Importance.value = importanceLevel;
-};
+    std::string str_level = command.substr(0, lptr);
 
-ImportanceLevel Logger::GetImportanceLevel() { return Importance.value; };
+    if(str_level == "INFO") {
+        level = ImportanceLevel::info;
+
+    } else if(str_level== "WARN") {
+        level = ImportanceLevel::warn;
+
+    } else if(str_level == "ERROR") {
+        level = ImportanceLevel::error;
+
+    } else if (str_level == "DEBUG") {
+        level = ImportanceLevel::debug;
+    } else lptr = 0;
+
+    while (lptr < command.size() && command[lptr] == ' ') lptr++;
+    std::string ans = command.substr(lptr);
+    return {level, ans};
+}
