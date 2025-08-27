@@ -1,7 +1,7 @@
 #pragma once
 #include <optional>
-#include "error.h"
 #include <mutex>
+#include <logger/util/error.h>
 
 enum ImportanceLevel {
     debug = 0,

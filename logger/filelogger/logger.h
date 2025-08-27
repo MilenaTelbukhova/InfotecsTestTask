@@ -2,8 +2,8 @@
 #include <fstream>
 #include <string>
 #include <mutex>
-#include "baselogger.h"
-#include "error.h"
+#include <logger/baselogger/baselogger.h>
+#include <logger/util/error.h>
 
 
 class Logger : public BaseLogger{

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <logger/logger.h>
+#include <logger/filelogger/logger.h>
 #include <regex>
-#include <logger/util.h>
+#include <logger/util/util.h>
 
 TEST(ParserTests, MainScenarios) {
     std::pair<ImportanceLevel, std::string> input [] = { 

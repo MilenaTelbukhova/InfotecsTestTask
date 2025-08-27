@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include "baselogger.h"
-
 namespace MessageParse {
     std::string getTime();
     std::string getImportanceString(ImportanceLevel level);

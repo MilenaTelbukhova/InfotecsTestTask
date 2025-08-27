@@ -1,7 +1,7 @@
 #include "socketlogger.h"
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "util.cpp"
+#include <logger/util/util.h>
 
 
 SocketLogger::SocketLogger(uint16_t socketPort, ImportanceLevel defaultImportanceLevel)
@@ -23,4 +23,4 @@ std::optional<Error>SocketLogger::Log(ImportanceLevel importance, const std::str
     std::string message = t.substr(4, t.size() - 5) + " [" + MessageParse::getImportanceString(importance) + "] " + text + '\n';
     send(Soket, message.c_str(), message.size(), 0);
     shutdown(Soket, SHUT_RDWR);
-}
+};
