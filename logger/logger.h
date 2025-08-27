@@ -20,5 +20,3 @@ class Logger : public BaseLogger{
         };
         LogJournal Journal;
 };
-
-std::pair<ImportanceLevel, std::string> ParseCommand(ImportanceLevel default_level, std::string& command);

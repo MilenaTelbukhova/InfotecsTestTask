@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <logger/logger.h>
 #include <regex>
+#include <logger/util.h>
 
 TEST(ParserTests, MainScenarios) {
     std::pair<ImportanceLevel, std::string> input [] = { 
@@ -28,7 +29,7 @@ TEST(ParserTests, MainScenarios) {
      };
 
      for (size_t i = 0; i < std::size(input); i++) {
-        auto parse = ParseCommand(input[i].first, input[i].second);
+        auto parse = MessageParse::ParseCommand(input[i].first, input[i].second);
         ASSERT_EQ(parse, output[i]);
      }
 }
