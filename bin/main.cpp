@@ -1,11 +1,10 @@
-#include<chrono>
 #include<iostream>
 #include<string>
 #include <logger/filelogger/logger.h>
+#include <logger/socketlogger/socketlogger.h>
 #include <logger/util/util.h>
 #include <utility>
 #include <thread>
-
 
 
 int main(int argc, char*argv[])
@@ -22,26 +21,28 @@ int main(int argc, char*argv[])
         std::cout << "invalid flag input" << std::endl;
         return 0;
     }
-
+    BaseLogger* logger;
     if (flag[1] == 'f') {
         std::filesystem::path path = argv[3];
-        Logger logger{path, importanceLevel};
-        while (true)
+        logger = new Logger(path, importanceLevel);
+    } else if (flag[1] == 's') {
+        uint16_t socket = std::atoi(argv[3]);
+        logger = new SocketLogger(socket, importanceLevel);
+    } else {
+        std::cout << "invalid flag input" << std::endl;
+    }
+
+    while (true)
         {
             std::string s;
             std::getline(std::cin, s);
-            auto res = MessageParse::ParseCommand(logger.GetImportanceLevel(), s);
+            auto res = MessageParse::ParseCommand((*logger).GetImportanceLevel(), s);
             std::thread th ([&logger](ImportanceLevel importance, const std::string& message){
-                auto err = logger.Log(importance, message);
+                auto err = (*logger).Log(importance, message);
                 if (err.has_value()) std::cout << err.value().Message;
             }, res.first, res.second);
             th.detach();
         }
-    } else if (flag[1] == 's') {
-        //socket logic
-    } else {
-        std::cout << "invalid flag input" << std::endl;
-    }
 
     return 0;
 }
