@@ -4,3 +4,6 @@ project(MyProject)
 
 add_subdirectory(logger)
 add_subdirectory(bin)
+
+enable_testing()
+add_subdirectory(tests)
