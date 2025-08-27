@@ -8,11 +8,6 @@ set(LOGGER_FILE
     ${CMAKE_CURRENT_SOURCE_DIR}/filelogger/logger.h
 )
 
-set(LOGGER_SOCKET
-    ${CMAKE_CURRENT_SOURCE_DIR}/socketlogger/socketlogger.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/socketlogger/socketlogger.h
-)
-
 set(LOGGER_UTIL
     ${CMAKE_CURRENT_SOURCE_DIR}/util/util.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/util/util.h
@@ -21,9 +16,9 @@ set(LOGGER_UTIL
 
 
 if (SHARED)
-    add_library(LoggerLib SHARED ${LOGGER_BASE} ${LOGGER_FILE} ${LOGGER_SOCKET} ${LOGGER_UTIL} ${LOGGER_ERROR})
+    add_library(LoggerLib SHARED ${LOGGER_BASE} ${LOGGER_FILE} ${LOGGER_UTIL} ${LOGGER_ERROR})
 else()
-    add_library(LoggerLib STATIC ${LOGGER_BASE} ${LOGGER_FILE} ${LOGGER_SOCKET} ${LOGGER_UTIL} ${LOGGER_ERROR})
+    add_library(LoggerLib STATIC ${LOGGER_BASE} ${LOGGER_FILE} ${LOGGER_UTIL} ${LOGGER_ERROR})
 endif()
 
 target_include_directories(LoggerLib PUBLIC 
